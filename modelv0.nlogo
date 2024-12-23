@@ -48,7 +48,8 @@ villages-own[
   lakeVillage ;; bol
 ]
 
-boats-own[
+boats-own[ 
+known_zones          ; Zones de pêche connues 
  ;myVillage
   team ; bol
   ReleveFilet
@@ -317,7 +318,16 @@ end
 to move
   move-to one-of lakeCells with[excluPeche = FALSE]
 end
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Le partage de connaissances et d'expérience 
+to share-knowledge
+  ask boats [
+    let nearby-boats boats in-radius 5  
+    let combined-zones remove-duplicates (sentence [known_zones] of nearby-boats)
+    set known_zones combined-zones
+  ]
+end
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; les pecheurs avancent dans une même direction : modelise lorsqu'ils relevent leurs filets
 to moveForward
   ;pour dessiner les pecheurs
