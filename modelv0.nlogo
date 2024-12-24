@@ -2,6 +2,7 @@ breed [boats boat]
 breed [villages village]
 
 globals [
+reglesCommunes ;;;;;;;;;;;;;;;;; TRUE si les règles communes sont en place;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; GIS Data
   myEnvelope
   lac
@@ -77,6 +78,7 @@ to setup
   clear-all
   reset-ticks
   InitiVar
+  set reglesCommunes TRUE ;;;;;;;;;;;;;;;;;;; Changez à FALSE pour désactiver les règles communes;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
   set myEnvelope gis:load-dataset "data/envelope.shp"
   set lac gis:load-dataset "data/lac.shp"
@@ -305,6 +307,15 @@ to go
     ]
 
   ]
+ ;;;;;;;;;;;;;;;;;;; Étape  : Règles communes ou non;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ifelse reglesCommunes [
+    ask boats [
+      set capture_totale min (list capture_totale 100) ;; Limitation de capture
+      if not any? lakeCells with [excluPeche = FALSE] [move]
+    ]
+  ] [
+    ask boats [move]
+  ] 
 
   caluclG
   if sumBiomass <= 0[stop]
